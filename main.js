@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const path = require('path')
+const url = require('url')
 
 let createWindow = () => {
     let win = new BrowserWindow({
@@ -7,15 +8,15 @@ let createWindow = () => {
         height: 500,
         center: true,
         resizable: false,
-        show: false,
-        webPreferences: {
-            preload: path.join(__dirname, path.sep, path.sep, 'preload.js'),
-            contextIsolation: true,
-            nodeIntegration: false,
-        }
+        show: false
     });
     win.setMenu(null);
-    win.loadURL(path.join('file:\\', __dirname, path.sep, 'index.html'));
+    const mainUrl = url.format({ // https://electronjs.org/docs/api/browser-window#winloadurlurl-options
+        protocol: 'file',
+        slashes: true,
+        pathname: path.join(__dirname, 'index.html')
+      })
+    win.loadURL(mainUrl);
     win.once('ready-to-show', () => {
         win.show();
         win.webContents.openDevTools();
